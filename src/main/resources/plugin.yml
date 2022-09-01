@@ -1,0 +1,4 @@
+name: Forever
+version: '${project.version}'
+main: nl.corwindev.forever.main
+api-version: 1.17
