@@ -1,4 +1,4 @@
-name: Forever
-version: '${project.version}'
-main: nl.corwindev.forever.main
+name: StreamerVsChat
+version: '1.0.0'
+main: nl.corwindev.streamervschat.main
 api-version: 1.17

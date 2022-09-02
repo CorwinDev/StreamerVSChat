@@ -4,17 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ForEver</groupId>
-    <artifactId>Forever</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>StreamerVSChat</groupId>
+    <artifactId>StreamerVSChat</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>Forever</name>
+    <name>Streamer vs Chat</name>
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-            <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <build>
@@ -32,8 +32,10 @@
                 <version>3.2.4</version>
                 <configuration>
                     <transformers>
-                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                            <mainClass>nl.corwindev.forever.main</mainClass> <!-- You have to replace this with a path to your main class like me.myname.mybotproject.Main -->
+                        <transformer
+                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                            <mainClass>nl.corwindev.streamervschat.main
+                            </mainClass>
                         </transformer>
                     </transformers>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
@@ -64,6 +66,11 @@
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>
         </repository>
+        <repository>
+            <id>twitch4j</id>
+            <name>m2-twitch4j</name>
+            <url>https://m2.twitch4j.net/releases</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -77,6 +84,11 @@
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>4.4.0_352</version>
+        </dependency>
+        <dependency>
+            <groupId>com.GitHub.twitch4j</groupId>
+            <artifactId>twitch4j-chat</artifactId>
+            <version>1.11.0</version>
         </dependency>
     </dependencies>
 </project>
