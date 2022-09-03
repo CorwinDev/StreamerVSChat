@@ -1,0 +1,14 @@
+discord: {
+  enabled: false,
+  token: 'discord token',
+  channel: 'channel id'
+}
+commands: {
+  prefix: '!',
+  delay: 5
+}
+twitch: {
+  enabled: false,
+  token: 'twitch token',
+  channel: 'twitch channel'
+}
