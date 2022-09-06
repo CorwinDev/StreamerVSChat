@@ -10,8 +10,6 @@ import javax.security.auth.login.LoginException;
 
 import nl.corwindev.streamervschat.main;
 
-import java.util.ArrayList;
-import java.util.List;
 
 import nl.corwindev.streamervschat.commands;
 
@@ -19,7 +17,10 @@ public class DiscordConnectionHelper {
     public static JDA api;
 
     public void main() throws LoginException, InterruptedException {
-        api = JDABuilder.createDefault(main.plugin.getConfig().getString("discord.token")).addEventListeners(new DiscordConnectionHelper.Listeners()).build().awaitReady();
+        api = JDABuilder.createDefault(main.plugin.getConfig().getString("discord.token"))
+                .addEventListeners(new DiscordConnectionHelper.Listeners())
+                .setContextEnabled(false)
+                .build().awaitReady();
     }
 
     public static boolean isConnected() {

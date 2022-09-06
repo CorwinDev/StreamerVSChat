@@ -1,17 +1,12 @@
 package nl.corwindev.streamervschat;
 
+import nl.corwindev.streamervschat.youtube.YouTubeConnectionHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import nl.corwindev.streamervschat.discord.DiscordConnectionHelper;
 import nl.corwindev.streamervschat.twitch.TwitchConnectionHelper;
 import javax.security.auth.login.LoginException;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static jdk.internal.org.jline.utils.Log.debug;
-import static jdk.internal.org.jline.utils.Log.error;
+import nl.corwindev.streamervschat.objects.JdaFilter;
 
 public final class main extends JavaPlugin {
     // Exports this class to the plugin.
@@ -20,40 +15,64 @@ public final class main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        // Create config if it doesn't exist
         this.reloadConfig();
-        getLogger().info("Corwin starting up!");
         this.saveDefaultConfig();
         plugin = this;
+        boolean serverIsLog4jCapable = false;
+        boolean serverIsLog4j21Capable = false;
         try {
-            new DiscordConnectionHelper().main();
-        } catch (LoginException | InterruptedException e) {
-            e.printStackTrace();
+            serverIsLog4jCapable = Class.forName("org.apache.logging.log4j.core.Logger") != null;
+        } catch (ClassNotFoundException e) {
+            getLogger().info("Log4j classes are NOT available, console channel will not be attached");
         }
         try {
-            commands.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+            serverIsLog4j21Capable = Class.forName("org.apache.logging.log4j.core.Filter") != null;
+        } catch (ClassNotFoundException e) {
+            getLogger().info("Log4j 2.1 classes are NOT available, JDA messages will NOT be formatted properly");
         }
-        // Start twitch bot
-        if(plugin.getConfig().getString("twitch.token") != null) {
+
+        // add log4j filter for JDA messages
+        if (serverIsLog4j21Capable && jdaFilter == null) {
+            try {
+                Class<?> jdaFilterClass = Class.forName("nl.corwindev.streamervschat.objects.JdaFilter");
+                jdaFilter = (JdaFilter) jdaFilterClass.newInstance();
+                ((org.apache.logging.log4j.core.Logger) org.apache.logging.log4j.LogManager.getRootLogger()).addFilter((org.apache.logging.log4j.core.Filter) jdaFilter);
+                getLogger().info("ConsoleFilter Attached");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (plugin.getConfig().getBoolean("twitch.enabled")) {
             TwitchConnectionHelper.login();
         }
-        Logger.getLogger("net.dv8tion.jda.api.JDA").setLevel(Level.OFF);
-
+        if (plugin.getConfig().getBoolean("discord.enabled")) {
+            try {
+                new DiscordConnectionHelper().main();
+            } catch (LoginException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!plugin.getConfig().getBoolean("twitch.enabled") && !plugin.getConfig().getBoolean("discord.enabled") && !plugin.getConfig().getBoolean("youtube.enabled")) {
+            getLogger().info("No services enabled, disabling plugin.");
+            Bukkit.getPluginManager().disablePlugin(this);
+        } else {
+            try {
+                commands.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (plugin.getConfig().getBoolean("youtube.enabled")) {
+            YouTubeConnectionHelper.main("test");
+        }
     }
 
     @Override
     public void onDisable() {
-        Bukkit.getScheduler().runTask(
-                this,
-                () -> Bukkit.getPluginManager().disablePlugin(this)
-        );
-        // Plugin shutdown logic
-        if(DiscordConnectionHelper.isConnected()) {
+        if (DiscordConnectionHelper.isConnected()) {
             DiscordConnectionHelper.api.shutdownNow();
         }
-        if(TwitchConnectionHelper.isConnected()) {
+        if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.getBot().disconnect();
         }
         getLogger().info("Corwin shutting down!");
