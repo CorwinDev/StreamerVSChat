@@ -1,6 +1,8 @@
 # StreamerVSChat
 StreamerVSChat is a open source project that allows you to play against your followers/subscribers.
 
+![ThumbNail](https://user-images.githubusercontent.com/88144943/188877177-8514b504-0a9a-4eef-b870-19ea262ad705.png)
+
 ## How to use
 1. Download the latest release from [here](https://github.com/CorwinDev/StreamerVSChat/releases)
 2. Upload the file to your plugin folder
