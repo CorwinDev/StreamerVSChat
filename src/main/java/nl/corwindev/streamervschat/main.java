@@ -69,8 +69,10 @@ public final class main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (DiscordConnectionHelper.isConnected()) {
-            DiscordConnectionHelper.api.shutdownNow();
+        if(DiscordConnectionHelper.api != null) {
+            if (DiscordConnectionHelper.isConnected()) {
+                DiscordConnectionHelper.api.shutdown();
+            }
         }
         if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.getBot().disconnect();

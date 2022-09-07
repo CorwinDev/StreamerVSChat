@@ -1,22 +1,22 @@
 discord: {
   enabled: false,
-  token: 'discord token', #Get your token from here: https://discord.dev
+  token: 'discord token',
   channel: 'channel id'
 }
 
 twitch: {
   enabled: false,
-  token: 'twitch token', #Get your token from here: https://twitchapps.com/tmi/
+  token: 'twitch token',
   channel: 'twitch channel' 
 }
 
 youtube: {
   enabled: false,
   youtubeId: 'youtube id',
-  apiKey: 'youtube api key' # https://developers.google.com/youtube/v3/getting-started
+  apiKey: 'youtube api key'
 }
 
 commands: {
   prefix: '!',
-  delay: 30 #Delay to check for new messages
+  delay: 30
 }

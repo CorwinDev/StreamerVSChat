@@ -1,6 +1,7 @@
 package nl.corwindev.streamervschat;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -9,6 +10,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
@@ -95,9 +98,14 @@ public class commands {
     }
     public static void dropall(){
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.getWorld().dropItem(player.getLocation(), player.getInventory().getItemInMainHand());
-            player.getWorld().dropItem(player.getLocation(), player.getInventory().getItemInOffHand());
-            player.getInventory().clear();
+            Location loc = player.getLocation().clone();
+            Inventory inv = player.getInventory();
+            for (ItemStack item : inv.getContents()) {
+                if (item != null) {
+                    loc.getWorld().dropItemNaturally(loc, item.clone());
+                }
+            }
+            inv.clear();
         }
     }
     public static void blindness(){
