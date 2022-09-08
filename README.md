@@ -20,7 +20,7 @@ StreamerVSChat is a open source project that allows you to play against your fol
 4. Restart your server
 
 ## How to use the commands
-We have over 10 commands that you can use to control the streamer:
+We have over 15 commands that you can use to control the streamer:
 | Command | Description |
 | --- | --- |
 | !lava | Place lava under the streamer |
@@ -35,6 +35,11 @@ We have over 10 commands that you can use to control the streamer:
 | !witherscare or !wither | Summons sound of wither |
 | !creeper | Summons a creeper on the streamer |
 | !zombie | Summons a zombie on the streamer |
+| !illness or !nausea | Gives streamer illness |
+| !slowness | Gives streamer slowness effect | 
+| !badluck | Gives streamer BadLuck effect | 
+| !mining or !miningfatique | Gives streamer miningfatigue | 
+// All ! above can be replaced with your custom prefix
 // More commands coming soon //
 
 
