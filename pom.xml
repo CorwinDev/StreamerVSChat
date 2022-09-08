@@ -66,6 +66,10 @@
             <name>m2-dv8tion</name>
             <url>https://m2.dv8tion.net/releases</url>
         </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -92,7 +96,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.GitHub.twitch4j</groupId>
+            <groupId>com.github.twitch4j</groupId>
             <artifactId>twitch4j-chat</artifactId>
             <version>1.11.0</version>
         </dependency>
