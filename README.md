@@ -20,7 +20,7 @@ StreamerVSChat is a open source project that allows you to play against your fol
 4. Restart your server
 
 ## How to use the commands
-We have over 10 commands that you can use to control the streamer:
+We have over 15 commands that you can use to control the streamer:
 | Command | Description |
 | --- | --- |
 | !lava | Place lava under the streamer |
