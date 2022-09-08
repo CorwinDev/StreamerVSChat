@@ -1,22 +1,38 @@
+# Commands Prefix
+# Delay between commands
+# Its recommended to set this to 10 seconds or higher
+
+commands: {
+  prefix: '!',
+  delay: 30
+}
+
+# Set affected players
+# all/permission
+# all: All players will be affected
+# permission: Only players with the permission (nl.corwindev.streamervschat.streamer) will be affected
+affected-players: all
+
+# Discord Bot
+# https://github.com/CorwinDev/StreamerVSChat/wiki#discord-setup
 discord: {
   enabled: false,
   token: 'discord token',
   channel: 'channel id'
 }
 
+# Twitch Chat
+# https://github.com/CorwinDev/StreamerVSChat/wiki#twitch-setup
 twitch: {
   enabled: false,
   token: 'twitch token',
   channel: 'twitch channel' 
 }
 
+# Youtube Chat
+# https://github.com/CorwinDev/StreamerVSChat/wiki#youtube-setup
 youtube: {
   enabled: false,
   youtubeId: 'youtube id',
   apiKey: 'youtube api key'
-}
-
-commands: {
-  prefix: '!',
-  delay: 30
 }

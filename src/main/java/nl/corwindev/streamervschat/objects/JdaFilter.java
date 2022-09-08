@@ -44,7 +44,7 @@ public class JdaFilter implements Filter {
                 default:
                     main.plugin.getLogger().info("[JDA] " + message);
             }
-        }else if(loggerName.startsWith("com.github.twitch4j") || loggerName.startsWith("com.github.philippheuer.events4j")){
+        }else if(loggerName.startsWith("com.github.twitch4j") || loggerName.startsWith("com.github.philippheuer.events4j")) {
             switch (level.name()) {
                 case "INFO":
                     main.plugin.getLogger().info("[TWITCH] " + message);
@@ -62,10 +62,29 @@ public class JdaFilter implements Filter {
                 default:
                     main.plugin.getLogger().info("[TWITCH] " + message);
             }
+        }else if(loggerName.startsWith("com.google.api")){
+            switch (level.name()) {
+                case "INFO":
+                    main.plugin.getLogger().info("[YOUTUBE] " + message);
+                    break;
+                case "WARN":
+                    main.plugin.getLogger().warning("[YOUTUBE] " + message);
+                    break;
+                case "ERROR":
+                    if (throwable != null) {
+                        main.plugin.getLogger().info("[YOUTUBE] " + message + "\n" + ExceptionUtils.getStackTrace(throwable));
+                    } else {
+                        main.plugin.getLogger().info("[YOUTUBE] " + message);
+                    }
+                    break;
+                default:
+                    main.plugin.getLogger().info("[YOUTUBE] " + message);
+            }
         }else{
             return Result.NEUTRAL;
         }
         return Result.DENY;
+
     }
 
     @Override

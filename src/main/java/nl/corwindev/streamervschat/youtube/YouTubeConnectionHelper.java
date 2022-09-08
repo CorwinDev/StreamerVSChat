@@ -57,8 +57,6 @@ public class YouTubeConnectionHelper {
             final String liveChatId,
             final String nextPageToken,
             long delayMs) {
-        System.out.println(
-                String.format("Getting chat messages in %1$.3f seconds...", delayMs * 0.001));
         Timer pollTimer = new Timer();
         pollTimer.schedule(
                 new TimerTask() {

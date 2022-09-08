@@ -2,3 +2,11 @@ name: StreamerVsChat
 version: '1.1'
 main: nl.corwindev.streamervschat.main
 api-version: 1.13
+commands:
+  testcommand:
+    description: 'Test the commands'
+    usage: '/testcommand'
+    permission: nl.corwindev.streamervschat.streamer
+    permission-message: 'You do not have permission to use this command'
+    default: false
+    permission-default: op

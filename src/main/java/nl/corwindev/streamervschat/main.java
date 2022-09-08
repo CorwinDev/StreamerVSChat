@@ -1,5 +1,6 @@
 package nl.corwindev.streamervschat;
 
+import net.dv8tion.jda.api.JDA;
 import nl.corwindev.streamervschat.youtube.YouTubeConnectionHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -7,7 +8,7 @@ import nl.corwindev.streamervschat.discord.DiscordConnectionHelper;
 import nl.corwindev.streamervschat.twitch.TwitchConnectionHelper;
 import javax.security.auth.login.LoginException;
 import nl.corwindev.streamervschat.objects.JdaFilter;
-
+import nl.corwindev.streamervschat.command.TestCommand;
 public final class main extends JavaPlugin {
     // Exports this class to the plugin.
     public static main plugin;
@@ -18,6 +19,16 @@ public final class main extends JavaPlugin {
         this.reloadConfig();
         this.saveDefaultConfig();
         plugin = this;
+        if (!plugin.getConfig().getBoolean("twitch.enabled") && !plugin.getConfig().getBoolean("discord.enabled") && !plugin.getConfig().getBoolean("youtube.enabled")) {
+            getLogger().info("No services enabled, disabling plugin.");
+            Bukkit.getPluginManager().disablePlugin(this);
+        } else {
+            try {
+                commands.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         boolean serverIsLog4jCapable = false;
         boolean serverIsLog4j21Capable = false;
         try {
@@ -52,19 +63,10 @@ public final class main extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        if (!plugin.getConfig().getBoolean("twitch.enabled") && !plugin.getConfig().getBoolean("discord.enabled") && !plugin.getConfig().getBoolean("youtube.enabled")) {
-            getLogger().info("No services enabled, disabling plugin.");
-            Bukkit.getPluginManager().disablePlugin(this);
-        } else {
-            try {
-                commands.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
         if (plugin.getConfig().getBoolean("youtube.enabled")) {
             YouTubeConnectionHelper.main("test");
         }
+        this.getCommand("testcommand").setExecutor(new TestCommand());
     }
 
     @Override
