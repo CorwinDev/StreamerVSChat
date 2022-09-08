@@ -35,6 +35,11 @@ We have over 10 commands that you can use to control the streamer:
 | !witherscare or !wither | Summons sound of wither |
 | !creeper | Summons a creeper on the streamer |
 | !zombie | Summons a zombie on the streamer |
+| !illness or !nausea | Gives streamer illness |
+| !slowness | Gives streamer slowness effect | 
+| !badluck | Gives streamer BadLuck effect | 
+| !mining or !miningfatique | Gives streamer miningfatigue | 
+// All ! above can be replaced with your custom prefix
 // More commands coming soon //
 
 
