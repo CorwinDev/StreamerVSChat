@@ -43,6 +43,9 @@ public class commands {
 
     public static void runCmd(String command) {
         commandList.clear();
+        if(Objects.requireNonNull(plugin.getConfig().getList("blacklist")).contains(command)){
+            return;
+        }
         if (Objects.equals(command, "lava")) {
             commands.lava();
         } else if (Objects.equals(command, "anvil")) {
@@ -77,11 +80,19 @@ public class commands {
             commands.badluck();
         }else if(Objects.equals(command, "mining") || Objects.equals(command, "miningfatigue")){
             commands.miningfatigue();
+        }else if (Objects.equals(command, "heal")){
+            commands.heal();
+        } else if (Objects.equals(command,"feed")){
+            commands.feed();
+        }else if(Objects.equals(command, "jumpboost")){
+            commands.jumpboost();
+        }else if(Objects.equals(command, "levitate") || Objects.equals(command, "fly")) {
+            commands.fly();
         }
     }
 
     public static String name = "nl.corwindev.streamervschat";
-
+    public static Integer duration = plugin.getConfig().getInt("poison-duration");
     public static boolean has(Player player, String permission) {
         return player == null || player.hasPermission(name + "." + permission) || player.hasPermission(name + ".*");
     }
@@ -102,7 +113,6 @@ public class commands {
         }
     }
 
-    static World w = Bukkit.getWorld("world");
 
     public static void lava() {
         for (Player player : getPlayers()) {
@@ -146,7 +156,7 @@ public class commands {
 
     public static void blindness() {
         for (Player player : getPlayers()) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.BLINDNESS, 20 * 10, 1));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.BLINDNESS, duration * 20, 1));
         }
     }
 
@@ -176,7 +186,7 @@ public class commands {
 
     public static void explosion() {
         for (Player player : getPlayers()) {
-            TNTPrimed tnt = (TNTPrimed) w.spawnEntity(player.getLocation(), EntityType.PRIMED_TNT);
+            TNTPrimed tnt = (TNTPrimed) player.getWorld().spawnEntity(player.getLocation(), EntityType.PRIMED_TNT);
             tnt.setFuseTicks(40);
         }
     }
@@ -195,31 +205,57 @@ public class commands {
 
     public static void hunger() {
         for (Player player : getPlayers()) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.HUNGER, 20 * 30, 1));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.HUNGER, duration * 20, 1));
         }
     }
 
     public static void badluck(){
         for (Player player : getPlayers()) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.UNLUCK, 20 * 30, 1));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.UNLUCK, duration * 20, 1));
         }
     }
 
     public static void nausea(){
         for (Player player : getPlayers()) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.CONFUSION, 20 * 30, 1));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.CONFUSION, duration * 20, 1));
         }
     }
 
     public static void slowness(){
         for (Player player : getPlayers()) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SLOW, 20 * 30, 1));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SLOW, duration * 20, 1));
         }
     }
 
     public static void miningfatigue(){
         for (Player player : getPlayers()) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SLOW_DIGGING, 20 * 30, 1));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SLOW_DIGGING, duration * 20, 1));
+        }
+    }
+
+    public static void feed(){
+        for (Player player : getPlayers()) {
+            player.setFoodLevel(20);
+        }
+    }
+
+    public static void heal(){
+        //Gives the player regeneration and health boost 2
+        for (Player player : getPlayers()) {
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.REGENERATION, duration * 20, 1));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.HEALTH_BOOST, duration * 20, 1));
+        }
+    }
+
+    public static void jumpboost(){
+        for (Player player : getPlayers()) {
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.JUMP, duration * 20, 1));
+        }
+    }
+
+    public static void fly(){
+        for (Player player : getPlayers()) {
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.LEVITATION, duration * 20, 1));
         }
     }
 }

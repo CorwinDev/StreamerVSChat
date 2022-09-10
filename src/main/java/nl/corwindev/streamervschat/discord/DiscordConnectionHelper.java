@@ -47,4 +47,19 @@ public class DiscordConnectionHelper {
         }
     }
 
+    public static void reload(){
+        main.plugin.getLogger().info("[Discord] Reloading...");
+        main.plugin.reloadConfig();
+        if(api.getStatus() == JDA.Status.CONNECTED){
+            api.shutdown();
+        }
+        try {
+            main.plugin.getLogger().info("[Discord] Logging in...");
+            new DiscordConnectionHelper().main();
+        } catch (LoginException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        main.plugin.getLogger().info("[Discord] Reloaded!");
+    }
+
 }

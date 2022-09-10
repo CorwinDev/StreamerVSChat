@@ -41,7 +41,7 @@ public class YouTubeConnectionHelper {
             liveChatId = youtube.videos().list("liveStreamingDetails").setId(liveChatId).execute().getItems().get(0).getLiveStreamingDetails().getActiveLiveChatId();
             listChatMessages(liveChatId, null, main.plugin.getConfig().getInt("commands.delay") * 1000);
         } catch (Throwable t) {
-            t.printStackTrace();
+            main.plugin.getLogger().warning("[YouTube] Error: " + t.getMessage());
         }
     }
 
@@ -88,8 +88,7 @@ public class YouTubeConnectionHelper {
                                     response.getNextPageToken(),
                                     response.getPollingIntervalMillis());
                         } catch (Throwable t) {
-                            System.err.println("Throwable: " + t.getMessage());
-                            t.printStackTrace();
+                            main.plugin.getLogger().warning("[YouTube] Error: " + t.getMessage());
                         }
                     }
                 }, main.plugin.getConfig().getInt("commands.delay") * 1000);
@@ -143,5 +142,12 @@ public class YouTubeConnectionHelper {
             main.plugin.getServer().broadcastMessage(output.toString());
         }
         return output.toString();
+    }
+
+    public static void reload(){
+        main.plugin.getLogger().info("[YouTube] Reloading...");
+        main.plugin.reloadConfig();
+        main("run");
+        main.plugin.getLogger().info("[YouTube] Reloaded!");
     }
 }

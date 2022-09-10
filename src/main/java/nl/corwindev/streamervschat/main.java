@@ -1,14 +1,20 @@
 package nl.corwindev.streamervschat;
 
 import net.dv8tion.jda.api.JDA;
+import nl.corwindev.streamervschat.command.DiscordReload;
+import nl.corwindev.streamervschat.command.TwitchReload;
+import nl.corwindev.streamervschat.command.YouTubeReload;
 import nl.corwindev.streamervschat.youtube.YouTubeConnectionHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import nl.corwindev.streamervschat.discord.DiscordConnectionHelper;
 import nl.corwindev.streamervschat.twitch.TwitchConnectionHelper;
 import javax.security.auth.login.LoginException;
 import nl.corwindev.streamervschat.objects.JdaFilter;
 import nl.corwindev.streamervschat.command.TestCommand;
+import org.bukkit.util.Vector;
+
 public final class main extends JavaPlugin {
     // Exports this class to the plugin.
     public static main plugin;
@@ -64,9 +70,12 @@ public final class main extends JavaPlugin {
             }
         }
         if (plugin.getConfig().getBoolean("youtube.enabled")) {
-            YouTubeConnectionHelper.main("test");
+            YouTubeConnectionHelper.main("run");
         }
         this.getCommand("testcommand").setExecutor(new TestCommand());
+        this.getCommand("youtube-reload").setExecutor(new YouTubeReload());
+        this.getCommand("twitch-reload").setExecutor(new TwitchReload());
+        this.getCommand("discord-reload").setExecutor(new DiscordReload());
     }
 
     @Override

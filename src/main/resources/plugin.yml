@@ -1,11 +1,32 @@
 name: StreamerVsChat
-version: '1.2'
+version: '1.3'
 main: nl.corwindev.streamervschat.main
 api-version: 1.13
 commands:
   testcommand:
     description: 'Test the commands'
     usage: '/testcommand'
+    permission: nl.corwindev.streamervschat.streamer
+    permission-message: 'You do not have permission to use this command'
+    default: false
+    permission-default: op
+  youtube-reload:
+    description: 'Reload youtube integration'
+    usage: '/yt-reload'
+    permission: nl.corwindev.streamervschat.streamer
+    permission-message: 'You do not have permission to use this command'
+    default: false
+    permission-default: op
+  twitch-reload:
+    description: 'Reload twitch integration'
+    usage: '/twitch-reload'
+    permission: nl.corwindev.streamervschat.streamer
+    permission-message: 'You do not have permission to use this command'
+    default: false
+    permission-default: op
+  discord-reload:
+    description: 'Reload Discord integration'
+    usage: '/discord-reload'
     permission: nl.corwindev.streamervschat.streamer
     permission-message: 'You do not have permission to use this command'
     default: false

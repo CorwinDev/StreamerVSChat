@@ -13,6 +13,16 @@ commands: {
 # permission: Only players with the permission (nl.corwindev.streamervschat.streamer) will be affected
 affected-players: all
 
+# Poison effect
+# Set the duration of the poison effect
+poison-duration: 20
+
+# Blacklist
+# Set the words that will be blacklisted
+# If a player says one of these words, he will be denied
+blacklist: []
+
+
 # Discord Bot
 # https://github.com/CorwinDev/StreamerVSChat/wiki#discord-setup
 discord: {

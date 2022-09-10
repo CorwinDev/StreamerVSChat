@@ -6,6 +6,7 @@ import com.github.philippheuer.events4j.simple.SimpleEventHandler;
 import com.github.twitch4j.chat.TwitchChat;
 import com.github.twitch4j.chat.TwitchChatBuilder;
 import com.github.twitch4j.chat.enums.TMIConnectionState;
+import nl.corwindev.streamervschat.main;
 
 import java.util.function.Supplier;
 
@@ -61,5 +62,14 @@ public class TwitchConnectionHelper {
         botThread.interrupt();
 
         plugin.getLogger().info("Shutted down twitch bot");
+    }
+
+    public static void reload(){
+        main.plugin.getLogger().info("[Twitch] Reloading...");
+        main.plugin.reloadConfig();
+        if(isConnected()){
+            disconnectBot();
+        }
+        main.plugin.getLogger().info("[Twitch] Reloaded!");
     }
 }
