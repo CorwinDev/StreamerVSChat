@@ -8,7 +8,7 @@ StreamerVSChat is a open source project that allows you to play against your fol
 2. Upload the file to your plugin folder
 3. Start your server
 4. Edit the config file
-5. Restart your server
+5. Restart/reload your server
 
 SUPPORT AT [DISCORD](https://discord.gg/KrTfebJhNH)
 
@@ -19,9 +19,12 @@ SUPPORT AT [DISCORD](https://discord.gg/KrTfebJhNH)
    Get your YouTube API Key [here](https://console.developers.google.com/apis/credentials)<br>
    Get your Discord Bot Token [here](https://discord.com/developers/applications)<br>
 3. Save the file
-4. Restart your server
+4. Restart/reload your server
 
 ## How to use the commands
+### We have now ability to make custom commands!
+For more information, check out the [wiki](https://github.com/CorwinDev/StreamerVSChat/wiki#custom-commands-setup)
+   
 We have over 20 commands that you can use to control the streamer:
 | Command | Description |
 | --- | --- |
@@ -48,5 +51,4 @@ We have over 20 commands that you can use to control the streamer:
 | !heal | Heals the player |
 // All ! above can be replaced with your custom prefix
 // More commands coming soon //
-
 

@@ -3,7 +3,6 @@ package nl.corwindev.streamervschat;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -88,6 +87,8 @@ public class commands {
             commands.jumpboost();
         }else if(Objects.equals(command, "levitate") || Objects.equals(command, "fly")) {
             commands.fly();
+        }else {
+            commands.custom(command);
         }
     }
 
@@ -256,6 +257,17 @@ public class commands {
     public static void fly(){
         for (Player player : getPlayers()) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.LEVITATION, duration * 20, 1));
+        }
+    }
+
+    public static void custom(String command){
+        String command1 = plugin.getConfig().getString("customcommands." + command + ".command");
+        if(command1 != null){
+            for (Player player : getPlayers()) {
+                String command2 = command1.replace("%player%", player.getName());
+                plugin.getLogger().info(command2);
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command2);
+            }
         }
     }
 }

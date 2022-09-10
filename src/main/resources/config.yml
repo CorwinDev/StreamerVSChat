@@ -46,3 +46,18 @@ youtube: {
   youtubeId: 'youtube id',
   apiKey: 'youtube api key'
 }
+
+# Custom Commands
+#
+# You can add custom commands to the plugin
+# You can add as many commands as you want
+# Command name without the prefix
+# Command: Command that will be executed without the /
+# You can use %player% to get the player name
+# Example: !test -> /give %player% diamond 1
+
+customcommands:
+  'test':
+    command: 'give %player% diamond 1'
+  'test2':
+    command: 'give %player% diamond 2'
