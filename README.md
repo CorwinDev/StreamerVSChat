@@ -10,6 +10,8 @@ StreamerVSChat is a open source project that allows you to play against your fol
 4. Edit the config file
 5. Restart your server
 
+SUPPORT AT [DISCORD](https://discord.gg/KrTfebJhNH)
+
 ## How to configure
 1. Open the config file
 2. Change the settings <br>
