@@ -22,7 +22,7 @@ SUPPORT AT [DISCORD](https://discord.gg/KrTfebJhNH)
 4. Restart your server
 
 ## How to use the commands
-We have over 15 commands that you can use to control the streamer:
+We have over 20 commands that you can use to control the streamer:
 | Command | Description |
 | --- | --- |
 | !lava | Place lava under the streamer |
@@ -41,6 +41,11 @@ We have over 15 commands that you can use to control the streamer:
 | !slowness | Gives streamer slowness effect | 
 | !badluck | Gives streamer BadLuck effect | 
 | !mining or !miningfatique | Gives streamer miningfatigue | 
+| !hunger | Gives streamer hunger |
+| !fly or !levitate | Lets the streamer fly |
+| jumpboost | Gives streamer jumpboost effect |
+| !feed | Feeds the streamer |
+| !heal | Heals the player |
 // All ! above can be replaced with your custom prefix
 // More commands coming soon //
 
