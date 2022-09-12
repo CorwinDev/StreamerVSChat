@@ -28,8 +28,7 @@ public final class main extends JavaPlugin {
         this.reloadConfig();
         this.saveDefaultConfig();
         plugin = this;
-        int pluginId = 16419;
-        new UpdateChecker(this, pluginId).getVersion(version -> {
+        new UpdateChecker(this, 105119).getVersion(version -> {
             if (this.getDescription().getVersion().equals(version)) {
                 getLogger().info("There is not a new update available.");
             } else {
@@ -87,6 +86,7 @@ public final class main extends JavaPlugin {
         this.getCommand("youtube-reload").setExecutor(new YouTubeReload());
         this.getCommand("twitch-reload").setExecutor(new TwitchReload());
         this.getCommand("discord-reload").setExecutor(new DiscordReload());
+        int pluginId = 16419;
         Metrics metrics = new Metrics(this, pluginId);
         metrics.addCustomChart(new DrilldownPie("live_platform", () -> {
             Map<String, Map<String, Integer>> map = new HashMap<>();
