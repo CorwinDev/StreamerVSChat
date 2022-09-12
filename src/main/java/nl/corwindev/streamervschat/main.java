@@ -36,8 +36,7 @@ public final class main extends JavaPlugin {
             }
         });
         if (!plugin.getConfig().getBoolean("twitch.enabled") && !plugin.getConfig().getBoolean("discord.enabled") && !plugin.getConfig().getBoolean("youtube.enabled")) {
-            getLogger().info("No services enabled, disabling plugin.");
-            Bukkit.getPluginManager().disablePlugin(this);
+            getLogger().info("No services enabled...");
         } else {
             try {
                 commands.start();
