@@ -49,6 +49,10 @@ We have over 20 commands that you can use to control the streamer:
 | jumpboost | Gives streamer jumpboost effect |
 | !feed | Feeds the streamer |
 | !heal | Heals the player |
+| !randomeffect or !randompoison | Gives streamer random poison |
+| !fireball | Shoots fireball at streamer |
+| !drop | Drops item in main hand |
 // All ! above can be replaced with your custom prefix
 // More commands coming soon //
 
+![BStats](https://bstats.org/signatures/bukkit/StreamerVSChat.svg)
