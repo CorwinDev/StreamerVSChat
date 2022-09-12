@@ -6,7 +6,7 @@
 
     <groupId>StreamerVSChat</groupId>
     <artifactId>StreamerVSChat</artifactId>
-    <version>1.4</version>
+    <version>2.0</version>
     <packaging>jar</packaging>
 
     <name>Streamer vs Chat</name>
@@ -31,9 +31,14 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
                 <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>nl.corwindev.streamervschat.main</shadedPattern>
+                        </relocation>
+                    </relocations>
                     <transformers>
-                        <transformer
-                                implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <mainClass>nl.corwindev.streamervschat.main
                             </mainClass>
                         </transformer>
@@ -93,6 +98,10 @@
                     <groupId>club.minnced</groupId>
                     <artifactId>opus-java</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -104,12 +113,30 @@
                     <groupId>club.minnced</groupId>
                     <artifactId>opus-java</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.github.openfeign</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-youtube</artifactId>
             <version>v3-rev182-1.22.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

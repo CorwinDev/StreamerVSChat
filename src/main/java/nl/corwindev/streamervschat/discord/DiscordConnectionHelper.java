@@ -41,6 +41,7 @@ public class DiscordConnectionHelper {
                 Message message = event.getMessage();
                 String content = message.getContentRaw();
                 if (content.contains(main.plugin.getConfig().getString("commands.prefix"))) {
+                    commands.UserList.add(event.getAuthor().getName());
                     commands.commandList.add(content.replace(main.plugin.getConfig().getString("commands.prefix"), ""));
                 }
             }

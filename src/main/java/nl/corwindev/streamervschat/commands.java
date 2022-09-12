@@ -1,25 +1,28 @@
 package nl.corwindev.streamervschat;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static nl.corwindev.streamervschat.main.plugin;
 
 public class commands {
     public static List<String> commandList = new ArrayList<String>();
-
+    public static List<String> UserList = new ArrayList<String>();
     public static void start() {
         BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
             @Override
@@ -36,6 +39,10 @@ public class commands {
                 }
                 // Remove the command from the list
                 runCmd(command);
+                // Alert the user
+                for(Player player: getPlayers()) {
+                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§l" + UserList.get(randomCommand) + "§r§a has executed the command: §l" + command));
+                }
             }
         }, plugin.getConfig().getInt("commands.delay") * 20, plugin.getConfig().getInt("commands.delay") * 20);
     }
@@ -87,7 +94,13 @@ public class commands {
             commands.jumpboost();
         }else if(Objects.equals(command, "levitate") || Objects.equals(command, "fly")) {
             commands.fly();
-        }else {
+        }else if(Objects.equals(command, "randomeffect") || Objects.equals(command, "randompoison")){
+            commands.randomeffect();
+        }else if(Objects.equals(command, "fireball")) {
+            commands.fireball();
+        }else if(Objects.equals(command, "drop")){
+            commands.drop();
+        } else {
             commands.custom(command);
         }
     }
@@ -268,6 +281,32 @@ public class commands {
                 plugin.getLogger().info(command2);
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command2);
             }
+        }
+    }
+
+    public static void randomeffect(){
+        int rnd = ThreadLocalRandom.current().nextInt(PotionEffectType.values().length);
+
+        for (Player player : getPlayers()) {
+            player.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.values()[rnd], 200, 1));
+        }
+    }
+
+    public static void fireball(){
+        for (Player player : getPlayers()) {
+            // Send fireball to the player
+            Location location = new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY() + 20, player.getLocation().getZ() );
+            Vector vector = player.getLocation().toVector().subtract(location.toVector()).normalize();
+            Fireball fire = (Fireball) location.getWorld().spawn(location, Fireball.class);
+            fire.setDirection(vector);
+        }
+    }
+
+    public static void drop(){
+        for (Player player : getPlayers()) {
+            ItemStack hand = player.getInventory().getItemInMainHand();
+            player.getInventory().removeItem(hand);
+            player.getWorld().dropItemNaturally(player.getLocation(), hand);
         }
     }
 }

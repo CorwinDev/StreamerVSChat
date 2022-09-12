@@ -29,11 +29,9 @@ public class TwitchConnectionHelper {
 
 
             botThread = new Thread(() -> {
-
                 TwitchEvents bot = new TwitchEvents(twitchClient.getEventManager().getEventHandler(SimpleEventHandler.class));
                 twitchClient.joinChannel(plugin.getConfig().getString("twitch.channel"));
                 twitchClient.connect();
-
             });
 
             botThread.start();

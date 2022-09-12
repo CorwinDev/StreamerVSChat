@@ -16,6 +16,7 @@ public class TestCommand implements CommandExecutor {
                     commandSender.sendMessage(ChatColor.RED + "Correct usage: /testcommand <msg>");
                     return false;
                 }
+                commands.UserList.add(commandSender.getName());
                 commands.commandList.add(strings[0]);
                 commandSender.sendMessage(ChatColor.GREEN + "Added command: " + strings[0] + " to queue;");
                 return true;

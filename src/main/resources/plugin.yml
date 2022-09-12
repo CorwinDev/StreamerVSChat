@@ -1,5 +1,5 @@
 name: StreamerVsChat
-version: '1.4'
+version: '2.0'
 main: nl.corwindev.streamervschat.main
 api-version: 1.13
 commands:

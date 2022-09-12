@@ -1,19 +1,22 @@
 package nl.corwindev.streamervschat;
 
-import net.dv8tion.jda.api.JDA;
 import nl.corwindev.streamervschat.command.DiscordReload;
 import nl.corwindev.streamervschat.command.TwitchReload;
 import nl.corwindev.streamervschat.command.YouTubeReload;
+import nl.corwindev.streamervschat.objects.UpdateChecker;
 import nl.corwindev.streamervschat.youtube.YouTubeConnectionHelper;
+import org.bstats.charts.DrilldownPie;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import nl.corwindev.streamervschat.discord.DiscordConnectionHelper;
 import nl.corwindev.streamervschat.twitch.TwitchConnectionHelper;
 import javax.security.auth.login.LoginException;
 import nl.corwindev.streamervschat.objects.JdaFilter;
 import nl.corwindev.streamervschat.command.TestCommand;
-import org.bukkit.util.Vector;
+import org.bstats.bukkit.Metrics;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public final class main extends JavaPlugin {
     // Exports this class to the plugin.
@@ -25,6 +28,14 @@ public final class main extends JavaPlugin {
         this.reloadConfig();
         this.saveDefaultConfig();
         plugin = this;
+        int pluginId = 16419;
+        new UpdateChecker(this, pluginId).getVersion(version -> {
+            if (this.getDescription().getVersion().equals(version)) {
+                getLogger().info("There is not a new update available.");
+            } else {
+                getLogger().warning("There is a new update available. Download it here: https://www.spigotmc.org/resources/streamer-vs-chat-1-13-1-19.105119/");
+            }
+        });
         if (!plugin.getConfig().getBoolean("twitch.enabled") && !plugin.getConfig().getBoolean("discord.enabled") && !plugin.getConfig().getBoolean("youtube.enabled")) {
             getLogger().info("No services enabled, disabling plugin.");
             Bukkit.getPluginManager().disablePlugin(this);
@@ -76,6 +87,27 @@ public final class main extends JavaPlugin {
         this.getCommand("youtube-reload").setExecutor(new YouTubeReload());
         this.getCommand("twitch-reload").setExecutor(new TwitchReload());
         this.getCommand("discord-reload").setExecutor(new DiscordReload());
+        Metrics metrics = new Metrics(this, pluginId);
+        metrics.addCustomChart(new DrilldownPie("live_platform", () -> {
+            Map<String, Map<String, Integer>> map = new HashMap<>();
+            Boolean YouTubeEnabled = this.getConfig().getBoolean("youtube.enabled");
+            Boolean TwitchEnabled = this.getConfig().getBoolean("twitch.enabled");
+            Boolean DiscordEnabled = this.getConfig().getBoolean("discord.enabled");
+            Map<String, Integer> entry = new HashMap<>();
+            entry.put("YouTube", YouTubeEnabled ? 1 : 0);
+            entry.put("Twitch", TwitchEnabled ? 1 : 0);
+            entry.put("Discord", DiscordEnabled ? 1 : 0);
+            if(YouTubeEnabled) {
+                map.put("YouTube", entry);
+            }
+            if(TwitchEnabled) {
+                map.put("Twitch", entry);
+            }
+            if(DiscordEnabled) {
+                map.put("Discord", entry);
+            }
+            return map;
+        }));
     }
 
     @Override
@@ -88,6 +120,8 @@ public final class main extends JavaPlugin {
         if (TwitchConnectionHelper.isConnected()) {
             TwitchConnectionHelper.getBot().disconnect();
         }
+        YouTubeConnectionHelper.stop();
+
         getLogger().info("Corwin shutting down!");
 
     }

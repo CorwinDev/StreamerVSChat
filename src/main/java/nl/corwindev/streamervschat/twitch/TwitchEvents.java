@@ -15,6 +15,7 @@ public class TwitchEvents {
     private void onChannelMessage(ChannelMessageEvent event) {
         System.out.println(event.getUser().getName() + ": " + event.getMessage());
         if (event.getMessage().contains(main.plugin.getConfig().getString("commands.prefix"))) {
+            commands.UserList.add(event.getUser().getName());
             commands.commandList.add(event.getMessage().replace(main.plugin.getConfig().getString("commands.prefix"), ""));
         }
     }

@@ -44,7 +44,7 @@ public class YouTubeConnectionHelper {
             main.plugin.getLogger().warning("[YouTube] Error: " + t.getMessage());
         }
     }
-
+    public static TimerTask tt = null;
     /**
      * Lists live chat messages, polling at the server supplied interval. Owners and moderators of a
      * live chat will poll at a faster rate.
@@ -62,6 +62,7 @@ public class YouTubeConnectionHelper {
                 new TimerTask() {
                     @Override
                     public void run() {
+                        tt = this;
                         try {
                             // Get chat messages from YouTube
                             LiveChatMessageListResponse response = youtube
@@ -123,6 +124,7 @@ public class YouTubeConnectionHelper {
         if (author.getIsChatSponsor()) {
             roles.add("SPONSOR");
         }
+        commands.UserList.add(author.getDisplayName());
         if (roles.size() > 0) {
             output.append(" (");
             String delim = "";
@@ -147,7 +149,14 @@ public class YouTubeConnectionHelper {
     public static void reload(){
         main.plugin.getLogger().info("[YouTube] Reloading...");
         main.plugin.reloadConfig();
+        tt.cancel();
         main("run");
         main.plugin.getLogger().info("[YouTube] Reloaded!");
+    }
+
+    public static void stop(){
+        main.plugin.getLogger().info("[YouTube] Stopping...");
+        tt.cancel();
+        main.plugin.getLogger().info("[YouTube] Stopped!");
     }
 }
