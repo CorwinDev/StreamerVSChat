@@ -1,7 +1,10 @@
 # StreamerVSChat
 StreamerVSChat is a open source project that allows you to play against your followers/subscribers.
-
 ![ThumbNail](https://user-images.githubusercontent.com/88144943/188877177-8514b504-0a9a-4eef-b870-19ea262ad705.png)
+
+The plugin contains over 30 commands, and is fully customizable.
+
+You can also add your own commands!
 
 ## How to use
 1. Download the latest release from [here](https://github.com/CorwinDev/StreamerVSChat/releases)
@@ -52,6 +55,16 @@ We have over 20 commands that you can use to control the streamer:
 | !randomeffect or !randompoison | Gives streamer random poison |
 | !fireball | Shoots fireball at streamer |
 | !drop | Drops item in main hand |
+| !silverfish | Summons silverfish on streamer |
+| !vex | Summons vex on streamer |
+| !chicken | Summons chicken on streamer |
+| !bee | Summons angry bee on streamer |
+| !day | Sets time to day |
+| !night | Sets time to night |
+| !peaceful | Sets difficulty to peaceful |
+| !hard | Sets difficulty to hard |
+| !easy | Sets difficulty to easy |
+| !rename ~Name~ | Renames the streamer item currently holding|
 // All ! above can be replaced with your custom prefix
 // More commands coming soon //
 

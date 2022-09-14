@@ -1,15 +1,15 @@
 package nl.corwindev.streamervschat;
 
+import net.dv8tion.jda.api.entities.User;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
@@ -23,34 +23,44 @@ import static nl.corwindev.streamervschat.main.plugin;
 public class commands {
     public static List<String> commandList = new ArrayList<String>();
     public static List<String> UserList = new ArrayList<String>();
+    public static List<String> cooldowns = new ArrayList<String>();
+
     public static void start() {
         BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, new Runnable() {
             @Override
             public void run() {
-                // Pick a random command from the list
-                Random rand = new Random();
-                if (commandList.size() == 0) {
-                    return;
-                }
-                int randomCommand = rand.nextInt(commandList.size());
-                String command = commandList.get(randomCommand);
-                if (!command.isEmpty()) {
-                    commandList.clear();
-                }
-                // Remove the command from the list
-                runCmd(command);
-                // Alert the user
-                for(Player player: getPlayers()) {
-                    player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§l" + UserList.get(randomCommand) + "§r§a has executed the command: §l" + command));
-                }
+                startCommand();
             }
-        }, plugin.getConfig().getInt("commands.delay") * 20, plugin.getConfig().getInt("commands.delay") * 20);
+        }, plugin.getConfig().getInt("commands.delay") * 20L, plugin.getConfig().getInt("commands.delay") * 20L);
     }
-
-    public static void runCmd(String command) {
-        commandList.clear();
-        if(Objects.requireNonNull(plugin.getConfig().getList("blacklist")).contains(command)){
+    public static void startCommand(){
+        Random rand = new Random();
+        if (commandList.size() == 0) {
             return;
+        }
+        int randomCommand = rand.nextInt(commandList.size());
+        String command = commandList.get(randomCommand);
+        runCmd(command, UserList.get(randomCommand));
+    }
+    public static void runCmd(String command, String random) {
+        System.out.println(command);
+        if (Objects.requireNonNull(plugin.getConfig().getList("blacklist")).contains(command)) {
+            return;
+        }
+        if(plugin.getConfig().getString("cooldowns." + command) != null){
+            if(cooldowns.contains(command)){
+                commandList.remove(command);
+                startCommand();
+                return;
+            }else{
+                cooldowns.add(command);
+                Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        cooldowns.remove(command);
+                    }
+                }, plugin.getConfig().getInt("cooldowns." + command) * 20L);
+            }
         }
         if (Objects.equals(command, "lava")) {
             commands.lava();
@@ -78,51 +88,85 @@ public class commands {
             commands.creeper();
         } else if (Objects.equals(command, "zombie")) {
             commands.zombie();
-        }else if(Objects.equals(command, "illness") || Objects.equals(command, "nausea")){
+        } else if (Objects.equals(command, "illness") || Objects.equals(command, "nausea")) {
             commands.nausea();
-        }else if(Objects.equals(command, "slowness")){
+        } else if (Objects.equals(command, "slowness")) {
             commands.slowness();
-        }else if(Objects.equals(command, "badluck")){
+        } else if (Objects.equals(command, "badluck")) {
             commands.badluck();
-        }else if(Objects.equals(command, "mining") || Objects.equals(command, "miningfatigue")){
+        } else if (Objects.equals(command, "mining") || Objects.equals(command, "miningfatigue")) {
             commands.miningfatigue();
-        }else if (Objects.equals(command, "heal")){
+        } else if (Objects.equals(command, "heal")) {
             commands.heal();
-        } else if (Objects.equals(command,"feed")){
+        } else if (Objects.equals(command, "feed")) {
             commands.feed();
-        }else if(Objects.equals(command, "jumpboost")){
+        } else if (Objects.equals(command, "jumpboost")) {
             commands.jumpboost();
-        }else if(Objects.equals(command, "levitate") || Objects.equals(command, "fly")) {
+        } else if (Objects.equals(command, "levitate") || Objects.equals(command, "fly")) {
             commands.fly();
-        }else if(Objects.equals(command, "randomeffect") || Objects.equals(command, "randompoison")){
+        } else if (Objects.equals(command, "randomeffect") || Objects.equals(command, "randompoison")) {
             commands.randomeffect();
-        }else if(Objects.equals(command, "fireball")) {
+        } else if (Objects.equals(command, "fireball")) {
             commands.fireball();
-        }else if(Objects.equals(command, "drop")){
+        } else if (Objects.equals(command, "drop")) {
             commands.drop();
+        } else if (Objects.equals(command, "silverfish")) {
+            commands.silverfish();
+        } else if (Objects.equals(command, "vex")) {
+            commands.vex();
+        } else if (Objects.equals(command, "chicken")) {
+            commands.chicken();
+        } else if (Objects.equals(command, "bee")) {
+            commands.bee();
+        }else if(Objects.equals(command, "day")){
+            commands.day();
+        }else if(Objects.equals(command, "night")) {
+            commands.night();
+        }else if(Objects.equals(command, "peaceful")) {
+            commands.peaceful();
+        }else if(Objects.equals(command, "hard")) {
+            commands.hard();
+        }else if(Objects.equals(command, "easy")) {
+            commands.easy();
+        }else if(command.startsWith("rename")){
+            commands.rename(command);
         } else {
-            commands.custom(command);
+            if(!commands.custom(command)){
+                startCommand();
+                return;
+            }
         }
+        for (Player player : getPlayers()) {
+            String hotbar = plugin.getConfig().getString("hotbar");
+            if(hotbar == null){
+                hotbar = "§a§l%user%§r§a has executed the command: §l%command%";
+            }
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(hotbar.replace("%command%", command).replace("%user%", random)));
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§a§l" + random + "§r§a has executed the command: §l" + command));
+        }
+        commandList.clear();
+        UserList.clear();
     }
 
     public static String name = "nl.corwindev.streamervschat";
     public static Integer duration = plugin.getConfig().getInt("poison-duration");
+
     public static boolean has(Player player, String permission) {
         return player == null || player.hasPermission(name + "." + permission) || player.hasPermission(name + ".*");
     }
 
     public static Collection<Player> getPlayers() {
         Collection<Player> players = new ArrayList<>();
-        if(Objects.equals(plugin.getConfig().getString("affected-players"), "all")) {
+        if (Objects.equals(plugin.getConfig().getString("affected-players"), "all")) {
             return (Collection<Player>) Bukkit.getOnlinePlayers();
-        } else if(Objects.equals(plugin.getConfig().getString("affected-players"), "permission")) {
+        } else if (Objects.equals(plugin.getConfig().getString("affected-players"), "permission")) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (has(player, "streamer")) {
                     players.add(player);
                 }
             }
             return players;
-        }else{
+        } else {
             return (Collection<Player>) Bukkit.getOnlinePlayers();
         }
     }
@@ -223,37 +267,37 @@ public class commands {
         }
     }
 
-    public static void badluck(){
+    public static void badluck() {
         for (Player player : getPlayers()) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.UNLUCK, duration * 20, 1));
         }
     }
 
-    public static void nausea(){
+    public static void nausea() {
         for (Player player : getPlayers()) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.CONFUSION, duration * 20, 1));
         }
     }
 
-    public static void slowness(){
+    public static void slowness() {
         for (Player player : getPlayers()) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SLOW, duration * 20, 1));
         }
     }
 
-    public static void miningfatigue(){
+    public static void miningfatigue() {
         for (Player player : getPlayers()) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SLOW_DIGGING, duration * 20, 1));
         }
     }
 
-    public static void feed(){
+    public static void feed() {
         for (Player player : getPlayers()) {
             player.setFoodLevel(20);
         }
     }
 
-    public static void heal(){
+    public static void heal() {
         //Gives the player regeneration and health boost 2
         for (Player player : getPlayers()) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.REGENERATION, duration * 20, 1));
@@ -261,30 +305,46 @@ public class commands {
         }
     }
 
-    public static void jumpboost(){
+    public static void jumpboost() {
         for (Player player : getPlayers()) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.JUMP, duration * 20, 1));
         }
     }
 
-    public static void fly(){
+    public static void fly() {
         for (Player player : getPlayers()) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.LEVITATION, duration * 20, 1));
         }
     }
 
-    public static void custom(String command){
+    public static boolean custom(String command) {
         String command1 = plugin.getConfig().getString("customcommands." + command + ".command");
-        if(command1 != null){
+        if (command1 != null) {
+            Integer cooldown = plugin.getConfig().getInt("customcommands." + command + ".cooldown");
+
+            if (cooldown != null) {
+                if (cooldowns.contains(command)) {
+                    return false;
+                }
+                cooldowns.add(command);
+                Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        cooldowns.remove(command);
+                    }
+                }, cooldown * 20);
+            }
             for (Player player : getPlayers()) {
                 String command2 = command1.replace("%player%", player.getName());
                 plugin.getLogger().info(command2);
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command2);
             }
+            return true;
         }
+        return false;
     }
 
-    public static void randomeffect(){
+    public static void randomeffect() {
         int rnd = ThreadLocalRandom.current().nextInt(PotionEffectType.values().length);
 
         for (Player player : getPlayers()) {
@@ -292,21 +352,90 @@ public class commands {
         }
     }
 
-    public static void fireball(){
+    public static void fireball() {
         for (Player player : getPlayers()) {
             // Send fireball to the player
-            Location location = new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY() + 20, player.getLocation().getZ() );
+            Location location = new Location(player.getWorld(), player.getLocation().getX(), player.getLocation().getY() + 20, player.getLocation().getZ());
             Vector vector = player.getLocation().toVector().subtract(location.toVector()).normalize();
             Fireball fire = (Fireball) location.getWorld().spawn(location, Fireball.class);
             fire.setDirection(vector);
         }
     }
 
-    public static void drop(){
+    public static void drop() {
         for (Player player : getPlayers()) {
             ItemStack hand = player.getInventory().getItemInMainHand();
             player.getInventory().removeItem(hand);
             player.getWorld().dropItemNaturally(player.getLocation(), hand);
+        }
+    }
+
+    public static void silverfish() {
+        for (Player player : getPlayers()) {
+            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Silverfish.class);
+        }
+    }
+
+    public static void vex() {
+        for (Player player : getPlayers()) {
+            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Vex.class);
+        }
+    }
+
+    public static void bee() {
+        for (Player player : getPlayers()) {
+            // Make bee angry
+            Bee bee = (Bee) player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Bee.class);
+            bee.setAnger(1000000);
+            bee.attack(player);
+        }
+    }
+
+    public static void chicken() {
+        for (Player player : getPlayers()) {
+            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Chicken.class);
+        }
+    }
+
+    public static void day() {
+        for (Player player : getPlayers()) {
+            player.getWorld().setTime(0);
+        }
+    }
+
+    public static void night() {
+        for (Player player : getPlayers()) {
+            player.getWorld().setTime(14000);
+        }
+    }
+
+    public static void peaceful() {
+        for (Player player : getPlayers()) {
+            player.getWorld().setDifficulty(Difficulty.PEACEFUL);
+        }
+    }
+
+    public static void hard() {
+        for (Player player : getPlayers()) {
+            player.getWorld().setDifficulty(Difficulty.HARD);
+        }
+    }
+
+    public static void easy() {
+        for (Player player : getPlayers()) {
+            player.getWorld().setDifficulty(Difficulty.EASY);
+        }
+    }
+
+    public static void rename(String command) {
+        String name = command.substring(7);
+        for (Player player : getPlayers()) {
+            ItemStack hand = player.getInventory().getItemInMainHand();
+            ItemMeta meta = hand.getItemMeta();
+            assert meta != null;
+            int rnd = ThreadLocalRandom.current().nextInt(16);
+            meta.setDisplayName(ChatColor.values()[rnd] + name);
+            hand.setItemMeta(meta);
         }
     }
 }

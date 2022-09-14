@@ -111,7 +111,7 @@ public class YouTubeConnectionHelper {
         if (superChatDetails != null) {
             output.append(superChatDetails.getAmountDisplayString());
             output.append("SUPERCHAT RECEIVED FROM ");
-            commands.runCmd(message.replace(main.plugin.getConfig().getString("commands.prefix"), ""));
+            commands.runCmd(message.replace(main.plugin.getConfig().getString("commands.prefix"), ""), author.getDisplayName());
         }
         output.append(author.getDisplayName());
         List<String> roles = new ArrayList<String>();
@@ -149,14 +149,18 @@ public class YouTubeConnectionHelper {
     public static void reload(){
         main.plugin.getLogger().info("[YouTube] Reloading...");
         main.plugin.reloadConfig();
-        tt.cancel();
+        if(tt != null){
+            tt.cancel();
+        }
         main("run");
         main.plugin.getLogger().info("[YouTube] Reloaded!");
     }
 
     public static void stop(){
         main.plugin.getLogger().info("[YouTube] Stopping...");
-        tt.cancel();
+        if(tt != null){
+            tt.cancel();
+        }
         main.plugin.getLogger().info("[YouTube] Stopped!");
     }
 }

@@ -22,6 +22,20 @@ poison-duration: 20
 # If a player says one of these words, he will be denied
 blacklist: []
 
+# Cooldown
+# Set the cooldown for the commands
+# If a player uses a command, he will be denied for the set amount of seconds
+cooldowns:
+  dropall: 30
+  drop: 30
+
+
+# Hotbar message
+# Set the message that will be displayed in the hotbar
+# %player% will be replaced with the player's name
+# %command% will be replaced with the command
+hotbar: '§a§l%user%§r§a has executed the command: §l%command%'
+
 
 # Discord Bot
 # https://github.com/CorwinDev/StreamerVSChat/wiki#discord-setup
@@ -59,5 +73,6 @@ youtube: {
 customcommands:
   'test':
     command: 'give %player% diamond 1'
+    cooldown: 30
   'test2':
     command: 'give %player% diamond 2'
