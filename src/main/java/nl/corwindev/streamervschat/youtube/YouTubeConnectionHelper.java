@@ -5,6 +5,7 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 
+import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.*;
 import nl.corwindev.streamervschat.commands;
@@ -18,9 +19,8 @@ public class YouTubeConnectionHelper {
             "items(authorDetails(channelId,displayName,isChatModerator,isChatOwner,isChatSponsor,"
                     + "profileImageUrl),snippet(displayMessage,superChatDetails,publishedAt)),"
                     + "nextPageToken,pollingIntervalMillis";
-
+    public static boolean started = false;
     private static YouTube youtube;
-
     public static void main(String args) {
 
         // This OAuth 2.0 access scope allows for read-only access to the
@@ -74,20 +74,23 @@ public class YouTubeConnectionHelper {
 
                             // Display messages and super chat details
                             List<LiveChatMessage> messages = response.getItems();
-                            for (int i = 0; i < messages.size(); i++) {
-                                LiveChatMessage message = messages.get(i);
-                                LiveChatMessageSnippet snippet = message.getSnippet();
-                                System.out.println(buildOutput(
-                                        snippet.getDisplayMessage(),
-                                        message.getAuthorDetails(),
-                                        snippet.getSuperChatDetails()));
-                            }
+                            // Skip first run
+                                                         for (int i = 0; i < messages.size(); i++) {
+                                    LiveChatMessage message = messages.get(i);
+                                    LiveChatMessageSnippet snippet = message.getSnippet();
+                                    buildOutput(
+                                            snippet.getDisplayMessage(),
+                                            message.getAuthorDetails(),
+                                            snippet.getSuperChatDetails(),
+                                            snippet.getPublishedAt());
+                                }
 
-                            // Request the next page of messages
-                            listChatMessages(
-                                    liveChatId,
-                                    response.getNextPageToken(),
-                                    response.getPollingIntervalMillis());
+                                // Request the next page of messages
+                                listChatMessages(
+                                        liveChatId,
+                                        response.getNextPageToken(),
+                                        response.getPollingIntervalMillis());
+
                         } catch (Throwable t) {
                             main.plugin.getLogger().warning("[YouTube] Error: " + t.getMessage());
                         }
@@ -106,7 +109,12 @@ public class YouTubeConnectionHelper {
     private static String buildOutput(
             String message,
             LiveChatMessageAuthorDetails author,
-            LiveChatSuperChatDetails superChatDetails) {
+            LiveChatSuperChatDetails superChatDetails,
+            DateTime publishedAt) {
+        // Check if message is older then 5 minutes
+        if (publishedAt.getValue() < System.currentTimeMillis() - (main.plugin.getConfig().getInt("commands.delay") * 1000 + 1000)) {
+            return "";
+        }
         StringBuilder output = new StringBuilder();
         if (superChatDetails != null) {
             output.append(superChatDetails.getAmountDisplayString());
@@ -124,7 +132,6 @@ public class YouTubeConnectionHelper {
         if (author.getIsChatSponsor()) {
             roles.add("SPONSOR");
         }
-        commands.UserList.add(author.getDisplayName());
         if (roles.size() > 0) {
             output.append(" (");
             String delim = "";
@@ -139,6 +146,7 @@ public class YouTubeConnectionHelper {
             output.append(message);
         }
         if (message.contains(main.plugin.getConfig().getString("commands.prefix"))) {
+            commands.UserList.add(author.getDisplayName());
             commands.commandList.add(message.replace(main.plugin.getConfig().getString("commands.prefix"), ""));
         }else{
             main.plugin.getServer().broadcastMessage(output.toString());

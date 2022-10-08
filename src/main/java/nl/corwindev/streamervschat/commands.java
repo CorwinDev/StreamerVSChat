@@ -43,13 +43,14 @@ public class commands {
         runCmd(command, UserList.get(randomCommand));
     }
     public static void runCmd(String command, String random) {
-        System.out.println(command);
         if (Objects.requireNonNull(plugin.getConfig().getList("blacklist")).contains(command)) {
             return;
         }
+        int index = commandList.indexOf(command);
         if(plugin.getConfig().getString("cooldowns." + command) != null){
             if(cooldowns.contains(command)){
-                commandList.remove(command);
+                commandList.remove(index);
+                UserList.remove(index);
                 startCommand();
                 return;
             }else{
@@ -85,9 +86,9 @@ public class commands {
         } else if (Objects.equals(command, "witherscare") || Objects.equals(command, "wither")) {
             commands.wither();
         } else if (Objects.equals(command, "creeper")) {
-            commands.creeper();
+            commands.creeper(UserList.get(index));
         } else if (Objects.equals(command, "zombie")) {
-            commands.zombie();
+            commands.zombie(UserList.get(index));
         } else if (Objects.equals(command, "illness") || Objects.equals(command, "nausea")) {
             commands.nausea();
         } else if (Objects.equals(command, "slowness")) {
@@ -111,13 +112,13 @@ public class commands {
         } else if (Objects.equals(command, "drop")) {
             commands.drop();
         } else if (Objects.equals(command, "silverfish")) {
-            commands.silverfish();
+            commands.silverfish(UserList.get(index));
         } else if (Objects.equals(command, "vex")) {
-            commands.vex();
+            commands.vex(UserList.get(index));
         } else if (Objects.equals(command, "chicken")) {
-            commands.chicken();
+            commands.chicken(UserList.get(index));
         } else if (Objects.equals(command, "bee")) {
-            commands.bee();
+            commands.bee(UserList.get(index));
         }else if(Objects.equals(command, "day")){
             commands.day();
         }else if(Objects.equals(command, "night")) {
@@ -131,7 +132,9 @@ public class commands {
         }else if(command.startsWith("rename")){
             commands.rename(command);
         } else {
-            if(!commands.custom(command)){
+            if(!commands.custom(command, UserList.get(index))){
+                commandList.remove(index);
+                UserList.remove(index);
                 startCommand();
                 return;
             }
@@ -224,15 +227,15 @@ public class commands {
         }
     }
 
-    public static void creeper() {
+    public static void creeper(String user) {
         for (Player player : getPlayers()) {
-            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Creeper.class);
+            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Creeper.class).setCustomName("§c§l" + user);
         }
     }
 
-    public static void zombie() {
+    public static void zombie(String user) {
         for (Player player : getPlayers()) {
-            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Zombie.class);
+            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Zombie.class).setCustomName("§c§l" + user);
         }
     }
 
@@ -317,7 +320,7 @@ public class commands {
         }
     }
 
-    public static boolean custom(String command) {
+    public static boolean custom(String command, String user) {
         String command1 = plugin.getConfig().getString("customcommands." + command + ".command");
         if (command1 != null) {
             Integer cooldown = plugin.getConfig().getInt("customcommands." + command + ".cooldown");
@@ -336,7 +339,8 @@ public class commands {
             }
             for (Player player : getPlayers()) {
                 String command2 = command1.replace("%player%", player.getName());
-                plugin.getLogger().info(command2);
+                String command3 = command2.replace("%user%", user);
+                plugin.getLogger().info(command3);
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command2);
             }
             return true;
@@ -370,30 +374,31 @@ public class commands {
         }
     }
 
-    public static void silverfish() {
+    public static void silverfish(String user) {
         for (Player player : getPlayers()) {
-            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Silverfish.class);
+            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Silverfish.class).setCustomName("§c§l" + user);;
         }
     }
 
-    public static void vex() {
+    public static void vex(String user) {
         for (Player player : getPlayers()) {
-            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Vex.class);
+            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Vex.class).setCustomName("§c§l" + user);;
         }
     }
 
-    public static void bee() {
+    public static void bee(String user) {
         for (Player player : getPlayers()) {
             // Make bee angry
             Bee bee = (Bee) player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Bee.class);
             bee.setAnger(1000000);
+            bee.setCustomName("§c§l" + user);
             bee.attack(player);
         }
     }
 
-    public static void chicken() {
+    public static void chicken(String user) {
         for (Player player : getPlayers()) {
-            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Chicken.class);
+            player.getWorld().spawn(player.getLocation(), org.bukkit.entity.Chicken.class).setCustomName("§c§l" + user);;
         }
     }
 

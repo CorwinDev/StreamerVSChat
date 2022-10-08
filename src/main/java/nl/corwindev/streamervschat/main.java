@@ -37,12 +37,11 @@ public final class main extends JavaPlugin {
         });
         if (!plugin.getConfig().getBoolean("twitch.enabled") && !plugin.getConfig().getBoolean("discord.enabled") && !plugin.getConfig().getBoolean("youtube.enabled")) {
             getLogger().info("No services enabled...");
-        } else {
-            try {
-                commands.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        }
+        try {
+            commands.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         boolean serverIsLog4jCapable = false;
         boolean serverIsLog4j21Capable = false;
